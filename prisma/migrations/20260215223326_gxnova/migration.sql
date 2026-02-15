@@ -73,6 +73,7 @@ CREATE TABLE `Trabajo` (
     `latitud` DOUBLE NULL,
     `longitud` DOUBLE NULL,
     `fecha_estimada` DATETIME(3) NULL,
+    `foto` VARCHAR(255) NULL,
     `estado` ENUM('publicado', 'en_proceso', 'completado', 'cancelado') NOT NULL DEFAULT 'publicado',
     `fecha_creacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
