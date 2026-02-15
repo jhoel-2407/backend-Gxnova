@@ -153,6 +153,7 @@ model Trabajo {
   latitud             Float?
   longitud            Float?
   fecha_estimada      DateTime?
+  foto                String?       @db.VarChar(255) // URL o path de la foto del trabajo
   estado              EstadoTrabajo @default(publicado)
   fecha_creacion      DateTime      @default(now())
 

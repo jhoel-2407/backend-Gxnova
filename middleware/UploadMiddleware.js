@@ -1,22 +1,20 @@
 const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('cloudinary').v2;
 
-// Asegurarse de que el directorio de uploads exista
-const uploadDir = 'uploads/';
-if (!fs.existsSync(uploadDir)){
-    fs.mkdirSync(uploadDir);
+// Cloudinary se configura automáticamente si CLOUDINARY_URL está en .env
+// Pero por si acaso, verificamos que exista
+if (!process.env.CLOUDINARY_URL) {
+    console.warn("ADVERTENCIA: CLOUDINARY_URL no está definida en .env");
 }
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, uploadDir);
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'gxnova_trabajos', // Nombre de la carpeta en Cloudinary
+        allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+        // transformation: [{ width: 500, height: 500, crop: 'limit' }] // Opcional: redimensionar
     },
-    filename: function (req, file, cb) {
-        // Generar un nombre único: tipo-timestamp-originalName
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-    }
 });
 
 // Filtro de archivos
@@ -29,11 +27,11 @@ const fileFilter = (req, file, cb) => {
     }
 };
 
-const upload = multer({ 
+const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
     limits: {
-        fileSize: 5 * 1024 * 1024 // Limite de 5MB
+        fileSize: 10 * 1024 * 1024 // Limite de 10MB
     }
 });
 

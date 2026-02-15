@@ -11,10 +11,13 @@ router.get("/", TrabajoController.obtenerTrabajos);
 // Obtener trabajo por ID (público)
 router.get("/:id", TrabajoController.obtenerTrabajoPorId);
 
+const upload = require("../middleware/UploadMiddleware");
+
 // Crear trabajo (requiere autenticación, rol Empleador o Administrador)
 router.post("/",
     verificarJWT,
     rolMiddleware("Empleador", "Administrador"),
+    upload.single('foto'),
     TrabajoController.crearTrabajo
 );
 

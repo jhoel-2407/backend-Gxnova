@@ -128,6 +128,7 @@ const TrabajoService = {
                 latitud: data.latitud ? parseFloat(data.latitud) : null,
                 longitud: data.longitud ? parseFloat(data.longitud) : null,
                 fecha_estimada: data.fecha_estimada ? new Date(data.fecha_estimada) : null,
+                foto: data.foto || null,
                 estado: data.estado || 'publicado'
             },
             include: {

@@ -54,6 +54,9 @@ const TrabajoController = {
             fecha_estimada
         } = req.body;
 
+        // Con Cloudinary, req.file.path contiene la URL pública de la imagen
+        const foto = req.file ? req.file.path : null;
+
         // Validaciones
         if (!titulo || !descripcion || !tipo_pago || !ubicacion || !id_categoria) {
             return res.status(400).json({
@@ -85,7 +88,10 @@ const TrabajoController = {
                 ubicacion,
                 latitud,
                 longitud,
-                fecha_estimada
+                latitud,
+                longitud,
+                fecha_estimada,
+                foto
             });
 
             return res.status(201).json({

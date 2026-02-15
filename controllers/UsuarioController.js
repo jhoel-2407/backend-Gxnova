@@ -48,8 +48,8 @@ const UsuarioController = {
 
             // Si hay archivo subido, usar esa ruta. Si no, usar la URL si se envió texto.
             if (req.file) {
-                // Construir URL completa dinámicamente usando el host del backend
-                datosAActualizar.foto_perfil = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+                // Cloudinary URL desde el middleware
+                datosAActualizar.foto_perfil = req.file.path;
             } else if (foto_perfil) {
                 datosAActualizar.foto_perfil = foto_perfil;
             }
@@ -206,6 +206,28 @@ const UsuarioController = {
         } catch (error) {
             console.error("Error en UsuarioController.obtenerUsuarios:", error);
             return res.status(500).json({ error: 'Error interno al obtener los usuarios.' });
+        }
+    },
+
+    async obtenerPerfilPublico(req, res) {
+        try {
+            const idUsuario = parseInt(req.params.id);
+
+            if (isNaN(idUsuario)) {
+                return res.status(400).json({ error: 'ID de usuario inválido.' });
+            }
+
+            const perfil = await UsuarioService.obtenerPerfilPublico(idUsuario);
+
+            if (!perfil) {
+                return res.status(404).json({ error: 'Usuario no encontrado.' });
+            }
+
+            return res.status(200).json({ perfil });
+
+        } catch (error) {
+            console.error("Error en UsuarioController.obtenerPerfilPublico:", error);
+            return res.status(500).json({ error: 'Error al obtener el perfil público.' });
         }
     },
 };
