@@ -7,7 +7,8 @@ const upload = require("../middleware/UploadMiddleware");
 router.post("/register",
     upload.fields([
         { name: 'foto_cedula', maxCount: 1 },
-        { name: 'foto_perfil', maxCount: 1 }
+        { name: 'foto_perfil', maxCount: 1 },
+        { name: 'selfie', maxCount: 1 }
     ]),
     AuthController.register
 );

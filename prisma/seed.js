@@ -41,10 +41,46 @@ async function main() {
 
     // --- 4. Crear Usuarios ---
     const usuariosData = [
-        { nombre: "Admin", apellido: "System", correo: "admin@gxnova.com", rolId: adminRol.id_rol },
-        { nombre: "Carlos", apellido: "Empleador", correo: "carlos@cliente.com", rolId: empleadorRol.id_rol, telefono: "555-0001" },
-        { nombre: "Ana", apellido: "Trabajadora", correo: "ana@worker.com", rolId: trabajadorRol.id_rol, telefono: "555-0002" },
-        { nombre: "Luis", apellido: "Trabajador", correo: "luis@worker.com", rolId: trabajadorRol.id_rol, telefono: "555-0003" }
+        {
+            nombre: "Admin",
+            apellido: "System",
+            correo: "admin@gxnova.com",
+            rolId: adminRol.id_rol,
+            telefono: "555-0000",
+            verificado: true // Admin pre-verificado
+        },
+        {
+            nombre: "Carlos",
+            apellido: "Empleador",
+            correo: "carlos@cliente.com",
+            rolId: empleadorRol.id_rol,
+            telefono: "555-0001",
+            verificado: true // Empleador pre-verificado para pruebas
+        },
+        {
+            nombre: "Ana",
+            apellido: "Trabajadora",
+            correo: "ana@worker.com",
+            rolId: trabajadorRol.id_rol,
+            telefono: "555-0002",
+            verificado: true // Trabajadora pre-verificada para pruebas
+        },
+        {
+            nombre: "Luis",
+            apellido: "Trabajador",
+            correo: "luis@worker.com",
+            rolId: trabajadorRol.id_rol,
+            telefono: "555-0003",
+            verificado: true // Trabajador pre-verificado para pruebas
+        },
+        {
+            nombre: "María",
+            apellido: "González",
+            correo: "maria@empleador.com",
+            rolId: empleadorRol.id_rol,
+            telefono: "555-0004",
+            verificado: true // Empleadora adicional para pruebas
+        }
     ];
 
     const usuariosMap = {}; // Para acceder fácilmente después
@@ -59,7 +95,11 @@ async function main() {
                 correo: u.correo,
                 password_hash: password,
                 telefono: u.telefono,
-                estado: 'activo'
+                estado: 'activo',
+                verificado: u.verificado,
+                fecha_verificacion: u.verificado ? new Date() : null,
+                // No incluimos foto_cedula ni foto_rostro para usuarios de seed
+                // Estos son usuarios de prueba pre-verificados
             }
         });
 
@@ -72,7 +112,7 @@ async function main() {
 
         usuariosMap[u.correo] = usuario;
     }
-    console.log("Usuarios creados.");
+    console.log("Usuarios creados (todos pre-verificados para pruebas).");
 
     // --- 5. Asignar Habilidades (Skills) ---
     // Ana sabe Plomería y Electricidad

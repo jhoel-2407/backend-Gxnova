@@ -10,6 +10,7 @@ CREATE TABLE `Usuario` (
     `fecha_registro` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `estado` ENUM('activo', 'suspendido') NOT NULL DEFAULT 'activo',
     `foto_cedula` VARCHAR(255) NULL,
+    `foto_rostro` VARCHAR(255) NULL,
     `verificado` BOOLEAN NOT NULL DEFAULT false,
     `fecha_verificacion` DATETIME(3) NULL,
 

@@ -26,7 +26,7 @@ const limpiarUsuario = (usuario) => {
 
 const AuthServices = {
     async register(data) {
-        const { nombre, apellido, correo, password, telefono, rolNombre, foto_cedula_path, foto_perfil_path } = data;
+        const { nombre, apellido, correo, password, telefono, rolNombre, foto_cedula_path, foto_perfil_path, selfie_path } = data;
 
         const usuarioExistente = await UsuarioService.obtenerPorCorreo(correo);
         if (usuarioExistente) {
@@ -48,18 +48,39 @@ const AuthServices = {
             datosUsuario.telefono = telefono;
         }
 
-        // Lógica de Verificación de Identidad
-        if (foto_cedula_path && foto_perfil_path) {
-            datosUsuario.foto_cedula = foto_cedula_path;
+        // Agregar foto_perfil si existe
+        if (foto_perfil_path) {
             datosUsuario.foto_perfil = foto_perfil_path;
+        }
 
-            // Intentar verificar automáticamente
-            const esVerificado = await VerificationService.verificarIdentidad(foto_cedula_path, foto_perfil_path);
+        // ===== VERIFICACIÓN FACIAL OBLIGATORIA PARA EMPLEADOR Y TRABAJADOR =====
+        // Validar que ambas imágenes (cédula y selfie) estén presentes
+        if (!foto_cedula_path || !selfie_path) {
+            throw new Error("La foto de cédula y la selfie son obligatorias para el registro");
+        }
+
+        // Guardar foto_cedula
+        datosUsuario.foto_cedula = foto_cedula_path;
+
+        // Intentar verificar identidad con Face++
+        try {
+            const esVerificado = await VerificationService.verificarIdentidad(
+                foto_cedula_path,
+                selfie_path
+            );
 
             if (esVerificado) {
+                // Guardar la selfie verificada
+                datosUsuario.foto_rostro = selfie_path;
                 datosUsuario.verificado = true;
                 datosUsuario.fecha_verificacion = new Date();
+
+                console.log("[AuthServices] Usuario verificado exitosamente con Face++");
             }
+        } catch (error) {
+            // Si la verificación falla, lanzar el error específico
+            console.error("[AuthServices] Error en verificación facial:", error.message);
+            throw error; // Propagar el error (rostro no coincide o duplicado)
         }
 
         const nuevoUsuario = await UsuarioService.crearUsuario(datosUsuario);

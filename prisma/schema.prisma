@@ -61,6 +61,7 @@ model Usuario {
   fecha_registro DateTime      @default(now())
   estado         EstadoUsuario @default(activo)
   foto_cedula    String?       @db.VarChar(255) // URL o path de la foto de la cédula
+  foto_rostro    String?       @db.VarChar(255) // URL de la selfie verificada
   verificado     Boolean       @default(false)  // Estado de la verificación de identidad
   fecha_verificacion DateTime?
 
